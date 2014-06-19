@@ -42,13 +42,14 @@ feat <- read.table("./features.txt", sep="")       ## feature numbers and corres
 colnames(df)[3:dim(df)[2]] <- as.character(feat$V2)      ## renames columns V1-V561 to the corresponding feature name
 
 ## PART 2: Check for "mean()" and "std()" in column names
-mean.std.check <- (grepl("mean()", colnames(df)), fixed = TRUE) + (grepl("std()", colnames(df)), fixed = TRUE)
+mean.std.check <- grepl("mean()", colnames(df), fixed = TRUE) + grepl("std()", colnames(df), fixed = TRUE)
 mean.std.check[1] <- 1 ## ensures that activity label column is maintained
 mean.std.check[2] <- 1 ## ensures that subject number column is maintained
 
 ## Creates new data frame with Activity Name, Subject Number, and Paramters that are Mean/StDevs
 dfnew <- df[ ,mean.std.check == 1]
 
+library(reshape2)
 
 meltdf <- melt(dfnew, id=c("subj", "act.name")) ## creates a skinny DF ordered by activity.name
 meltdf <- meltdf[order(meltdf$subj, meltdf$act.name),] ## orders the skinny DF by subject, then activity
